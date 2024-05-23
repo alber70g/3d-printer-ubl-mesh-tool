@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add your custom styles below */
+
+/* Headers */
+h1 {
+	font-size: 2rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 0.75rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	font-weight: bold;
+	margin-bottom: 0.5rem;
+}
+
+/* Links */
+a {
+	color: #3182ce;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+/* Body */
+body {
+	margin: 2rem;
+}
