@@ -51,7 +51,6 @@ const Grid: React.FC<GridProps> = ({ list, list2, setList2, options }) => {
     const updatedList = list2.map((row, rIndex) =>
       row.map((cell, cIndex) => {
         if (rIndex === rowIndex && cIndex === cellIndex) {
-          console.log(`cell: x: ${rIndex}, y: ${cIndex}`);
           // the cell we are updating
           return parseFloat((cell + value).toFixed(6));
         }

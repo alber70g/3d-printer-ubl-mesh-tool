@@ -112,6 +112,7 @@ function App() {
             value={options.fade}
             onChange={(e) => setOption("fade", parseInt(e.target.value))}
           >
+            <option value={0}>Fade 0</option>
             <option value={1}>Fade 1</option>
             <option value={2}>Fade 2</option>
             <option value={3}>Fade 3</option>
