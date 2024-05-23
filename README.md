@@ -1,30 +1,50 @@
-# React + TypeScript + Vite
+# 3D Printer UBL Mesh Tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Description
 
-## Expanding the ESLint configuration
+The 3D Printer UBL Mesh Tool is a utility that helps you generate Unified Bed Leveling (UBL) mesh files for your 3D printer. UBL mesh files are used to compensate for unevenness in the print bed, resulting in more accurate prints.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Features
 
-- Configure the top-level `parserOptions` property like this:
+- Generate UBL mesh files for your 3D printer
+- Easy-to-use command-line interface
+- Customizable mesh resolution and size
+- Supports various 3D printer firmware
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Installation
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. Clone the repository:
+
+  ```shell
+  git clone https://github.com/alber70g/3d-printer-ubl-mesh-tool.git
+  ```
+
+2. Install the required dependencies:
+
+  ```shell
+  pip install -r requirements.txt
+  ```
+
+## Usage
+
+1. Connect your 3D printer to your computer.
+
+2. Run the tool with the desired options:
+
+  ```shell
+  python ubl_mesh_tool.py --resolution 0.2 --size 200x200
+  ```
+
+  This will generate a UBL mesh file with a resolution of 0.2mm and a size of 200x200mm.
+
+3. Transfer the generated mesh file to your 3D printer and follow the instructions provided by your printer's firmware.
+
+## Contributing
+
+Contributions are welcome! If you find a bug or have a feature request, please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
