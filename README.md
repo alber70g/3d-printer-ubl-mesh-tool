@@ -7,6 +7,10 @@ printer Unified Bed Leveling (UBL) meshes. Users can dynamically adjust mesh
 points, view updates in real-time, and generate G-Code based on the
 modifications.
 
+## Play with it
+
+[https://alber70g.github.io/3d-printer-ubl-mesh-tool](https://alber70g.github.io/3d-printer-ubl-mesh-tool)
+
 ## Features
 
 - Load and visualize 3D printer bed meshes using the output from `M420 V`
