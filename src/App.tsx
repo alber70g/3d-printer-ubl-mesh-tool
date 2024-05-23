@@ -164,13 +164,18 @@ function App() {
 }
 
 function generateGCode(array1: number[][], array2: number[][]) {
+  if (array1.length === 0 || array2.length === 0) return "";
   let gCode = "";
+  const rowMap = Array.from({ length: array2.length }).map(
+    (_, i) => array2.length - i - 1
+  );
+
   for (let i = 0; i < array1.length; i++) {
     for (let j = 0; j < array1[i].length; j++) {
       const difference =
         Math.round((array2[i][j] - array1[i][j]) * 100000) / 100000;
       if (difference === 0) continue;
-      const gCodeCommand = `M421 I${i} J${j} Q${difference}\n`;
+      const gCodeCommand = `M421 I${j} J${rowMap[i]} Q${difference}\n`;
       gCode += gCodeCommand;
     }
   }

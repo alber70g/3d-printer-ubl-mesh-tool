@@ -39,20 +39,23 @@ function NumberListLoader({
   const handleLoadList = (contents: string) => {
     setContents(contents);
     const rows = contents.trim().split("\n");
-    const parsedList = rows.map((row) => {
-      let val: any = row.trim();
-      if (row.includes("|")) {
-        val = row.split("|")[1];
-      }
+    const parsedList = rows
+      .map((row) => {
+        let val: any = row.trim();
+        if (row.includes("|")) {
+          const [first, second] = row.split("|");
+          val = first + " " + second;
+        }
 
-      val = val
-        .split(" ")
-        .map((v) => v.trim())
-        .filter(Boolean)
-        .map((v) => v.replaceAll(/[[\]]/g, ""))
-        .map(Number);
-      return val;
-    });
+        val = val
+          .split(" ")
+          .map((v) => v.trim())
+          .filter(Boolean)
+          .map((v) => v.replaceAll(/[[\]]/g, ""))
+          .map(Number);
+        return val;
+      })
+      .filter((row) => row.length > 0);
     setList(parsedList);
   };
 
