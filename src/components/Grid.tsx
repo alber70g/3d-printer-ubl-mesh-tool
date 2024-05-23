@@ -1,23 +1,13 @@
-import React from 'react';
+import React from "react";
 
 type GridProps = {
   list: number[][];
-  options: { fade: number };
-  list2: number[][];
+  options?: { fade: number };
+  list2?: number[][];
   setList2?: (state: number[][]) => void;
 };
 
-type GridPropsWithList2 = {
-  list2: number[][];
-  setList2: (state: number[][]) => void;
-} & GridProps;
-
-const Grid: React.FC<GridProps | GridPropsWithList2> = ({
-  list,
-  list2,
-  setList2,
-  options,
-}) => {
+const Grid: React.FC<GridProps> = ({ list, list2, setList2, options }) => {
   const disableButtons = !setList2;
   const [currentRow, setCurrentRow] = React.useState<number | null>(null);
   const [currentCell, setCurrentCell] = React.useState<number | null>(null);
@@ -104,7 +94,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
                   key={cellIndex}
                   className="bg-gray-200 p-2"
                   style={{
-                    marginRight: '10px',
+                    marginRight: "10px",
                     backgroundColor: calculateHeatmapColor(cell),
                   }}
                   onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
