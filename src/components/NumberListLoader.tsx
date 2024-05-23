@@ -71,6 +71,9 @@ function NumberListLoader({
     if (contents.trim() === "") {
       return;
     }
+    if (contents === exampleOutput) {
+      return;
+    }
     localStorage.setItem("listContents", contents);
   }, [contents]);
 
@@ -92,7 +95,10 @@ function NumberListLoader({
         </button>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-          onClick={() => setTextContents(exampleOutput)}
+          onClick={() => {
+            setTextContents(exampleOutput);
+            handleLoadList(exampleOutput);
+          }}
         >
           Load example output
         </button>
