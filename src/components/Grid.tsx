@@ -2,6 +2,7 @@ import React from 'react';
 
 type GridProps = {
   list: number[][];
+  options: { fade: number };
   list2: number[][];
   setList2?: (state: number[][]) => void;
 };
@@ -15,6 +16,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
   list,
   list2,
   setList2,
+  options,
 }) => {
   const disableButtons = !setList2;
   const [currentRow, setCurrentRow] = React.useState<number | null>(null);
@@ -22,6 +24,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
   const [showButtons, setShowButtons] = React.useState<boolean>(
     !disableButtons
   );
+  const { fade } = options || { fade: 0 };
   const handleMouseEnter = (rowIndex: number, cellIndex: number) => {
     setCurrentRow(rowIndex);
     setCurrentCell(cellIndex);
@@ -46,22 +49,36 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
     setList2(updatedList);
   };
 
-  const handleButtonClick = (
+  const updateMeshPoint = (
     rowIndex: number,
     cellIndex: number,
     value: number
   ) => {
-    console.log('update');
     if (!list2[0]) {
       list2 = list;
       setList2(list2);
     }
     const updatedList = list2.map((row, rIndex) =>
-      rIndex === rowIndex
-        ? row.map((cell, cIndex) =>
-            cIndex === cellIndex ? parseFloat((cell + value).toFixed(2)) : cell
-          )
-        : row
+      row.map((cell, cIndex) => {
+        if (rIndex === rowIndex && cIndex === cellIndex) {
+          console.log(`cell: x: ${rIndex}, y: ${cIndex}`);
+          // the cell we are updating
+          return parseFloat((cell + value).toFixed(6));
+        }
+        if (
+          Math.abs(rIndex - rowIndex) <= fade &&
+          Math.abs(cIndex - cellIndex) <= fade
+        ) {
+          // this is the fade effect
+          const distance = Math.sqrt(
+            Math.pow(rowIndex - rIndex, 2) + Math.pow(cellIndex - cIndex, 2)
+          );
+          const fadeValue = value * (1 - distance / (fade + 1));
+          return parseFloat((cell + fadeValue).toFixed(6));
+        } else {
+          return cell;
+        }
+      })
     );
     setList2(updatedList);
   };
@@ -77,8 +94,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
 
   return (
     list &&
-    list[0] &&
-    list[0][0] && (
+    list[0] && (
       <table>
         <tbody>
           {list.map((row, rowIndex) => (
@@ -103,7 +119,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
                         <button
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
                           onClick={() =>
-                            handleButtonClick(rowIndex, cellIndex, 0.1)
+                            updateMeshPoint(rowIndex, cellIndex, 0.1)
                           }
                         >
                           +0.10
@@ -111,7 +127,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
                         <button
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
                           onClick={() =>
-                            handleButtonClick(rowIndex, cellIndex, 0.05)
+                            updateMeshPoint(rowIndex, cellIndex, 0.05)
                           }
                         >
                           +0.05
@@ -119,7 +135,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
                         <button
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
                           onClick={() =>
-                            handleButtonClick(rowIndex, cellIndex, 0.01)
+                            updateMeshPoint(rowIndex, cellIndex, 0.01)
                           }
                         >
                           +0.01
@@ -135,7 +151,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
                         <button
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
                           onClick={() =>
-                            handleButtonClick(rowIndex, cellIndex, -0.01)
+                            updateMeshPoint(rowIndex, cellIndex, -0.01)
                           }
                         >
                           -0.01
@@ -143,7 +159,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
                         <button
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
                           onClick={() =>
-                            handleButtonClick(rowIndex, cellIndex, -0.05)
+                            updateMeshPoint(rowIndex, cellIndex, -0.05)
                           }
                         >
                           -0.05
@@ -151,7 +167,7 @@ const Grid: React.FC<GridProps | GridPropsWithList2> = ({
                         <button
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
                           onClick={() =>
-                            handleButtonClick(rowIndex, cellIndex, -0.1)
+                            updateMeshPoint(rowIndex, cellIndex, -0.1)
                           }
                         >
                           -0.10

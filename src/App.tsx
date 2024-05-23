@@ -7,6 +7,11 @@ function App() {
   const [grid1, setGrid1] = useState<number[][]>([]);
   const [grid2, setGrid2] = useState<number[][]>([]);
 
+  const [options, setOptions] = useState<{ fade: number }>({ fade: 0 });
+  const setOption = (key: string, value: number) => {
+    setOptions({ ...options, [key]: value });
+  };
+
   useEffect(() => {
     // Retrieve grid1 from local storage
     const storedGrid1 = localStorage.getItem('grid1');
@@ -63,25 +68,50 @@ function App() {
           <li>Make any further modifications as needed.</li>
         </ol>
 
-        <div className="flex mx-auto">
-          <div className="w-1/2">
-            <h1 className="text-2xl font-bold mb-4 mt-8">Your input mesh</h1>
-
-            <Grid list={grid1} list2={grid2} setList2={setGrid2} />
-          </div>
-          <div className="w-1/2">
-            <h1 className="text-2xl font-bold mb-4 mt-8">New mesh</h1>
-            <div className="mb-4">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => setGrid2(grid1)}
-              >
-                Reset Grid
-              </button>
-            </div>
-            <Grid list={grid2} />
-          </div>
+        <h1 className="text-2xl font-bold mb-4 mt-8">Your input mesh</h1>
+        <div className="mb-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setOption('fade', 1)}
+          >
+            Fade 1 point
+          </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+            onClick={() => setOption('fade', 2)}
+          >
+            Fade 2 points
+          </button>
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+            onClick={() => setGrid1(grid1.slice(1))}
+          >
+            Remove first row
+          </button>
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+            onClick={() => setGrid1(grid1.map((row) => row.slice(1)))}
+          >
+            Remove first column
+          </button>
+          <span className="ml-2">Current fade value: {options.fade}</span>
         </div>
+        <Grid
+          list={grid1}
+          options={options}
+          list2={grid2}
+          setList2={setGrid2}
+        />
+        <h1 className="text-2xl font-bold mb-4 mt-8">New mesh</h1>
+        <div className="mb-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setGrid2(grid1)}
+          >
+            Reset Grid
+          </button>
+        </div>
+        <Grid list={grid2} />
         <section className="h-lvh">
           <h1 className="text-2xl font-bold mb-4 mt-8">G-Code</h1>
           <p>
@@ -102,7 +132,7 @@ function generateGCode(array1: number[][], array2: number[][]) {
   for (let i = 0; i < array1.length; i++) {
     for (let j = 0; j < array1[i].length; j++) {
       const difference =
-        Math.round((array2[i][j] - array1[i][j]) * 1_000) / 1_000;
+        Math.round((array2[i][j] - array1[i][j]) * 100000) / 100000;
       if (difference === 0) continue;
       const gCodeCommand = `M421 I${i} J${j} Q${difference}\n`;
       gCode += gCodeCommand;
