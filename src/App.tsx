@@ -66,24 +66,19 @@ function App() {
           </li>
           <li>View the updated mesh in the right grid.</li>
           <li>Make any further modifications as needed.</li>
+          <li>
+            Adjust the fade value using the dropdown menu. The fade value controls
+            the intensity of the color gradient applied to the cells in the right
+            grid. Higher fade values result in a more pronounced gradient, while
+            lower fade values result in a subtle gradient.
+          </li>
         </ol>
 
         <h1 className="text-2xl font-bold mb-4 mt-8">Your input mesh</h1>
+
         <div className="mb-4">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setOption('fade', 1)}
-          >
-            Fade 1 point
-          </button>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-            onClick={() => setOption('fade', 2)}
-          >
-            Fade 2 points
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
             onClick={() => setGrid1(grid1.slice(1))}
           >
             Remove first row
@@ -94,8 +89,36 @@ function App() {
           >
             Remove first column
           </button>
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+            onClick={() => setGrid1(grid1.slice(0, -1))}
+          >
+            Remove last row
+          </button>
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+            onClick={() => setGrid1(grid1.map((row) => row.slice(0, -1)))}
+          >
+            Remove last column
+          </button>
+        </div>
+
+        <div className="mb-4">
+          <select
+            className="bg-white border border-gray-300 rounded px-4 py-2 ml-2"
+            value={options.fade}
+            onChange={(e) => setOption('fade', parseInt(e.target.value))}
+          >
+            <option value={1}>Fade 1</option>
+            <option value={2}>Fade 2</option>
+            <option value={3}>Fade 3</option>
+            <option value={4}>Fade 4</option>
+            <option value={5}>Fade 5</option>
+            <option value={6}>Fade 6</option>
+          </select>
           <span className="ml-2">Current fade value: {options.fade}</span>
         </div>
+
         <Grid
           list={grid1}
           options={options}
