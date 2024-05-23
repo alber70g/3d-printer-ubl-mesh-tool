@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import NumberListLoader from './components/NumberListLoader';
-import Grid from './components/Grid';
+import { useEffect, useState } from "react";
+import "./App.css";
+import NumberListLoader from "./components/NumberListLoader";
+import Grid from "./components/Grid";
 
 function App() {
   const [grid1, setGrid1] = useState<number[][]>([]);
@@ -14,13 +14,13 @@ function App() {
 
   useEffect(() => {
     // Retrieve grid1 from local storage
-    const storedGrid1 = localStorage.getItem('grid1');
+    const storedGrid1 = localStorage.getItem("grid1");
     if (storedGrid1) {
       setGrid1(JSON.parse(storedGrid1));
     }
 
     // Retrieve grid2 from local storage
-    const storedGrid2 = localStorage.getItem('grid2');
+    const storedGrid2 = localStorage.getItem("grid2");
     if (storedGrid2) {
       setGrid2(JSON.parse(storedGrid2));
     }
@@ -28,12 +28,12 @@ function App() {
 
   useEffect(() => {
     // Store grid1 in local storage
-    localStorage.setItem('grid1', JSON.stringify(grid1));
+    localStorage.setItem("grid1", JSON.stringify(grid1));
   }, [grid1]);
 
   useEffect(() => {
     // Store grid2 in local storage
-    localStorage.setItem('grid2', JSON.stringify(grid2));
+    localStorage.setItem("grid2", JSON.stringify(grid2));
   }, [grid2]);
 
   return (
@@ -47,13 +47,13 @@ function App() {
           Bed Leveling (UBL) mesh.
         </p>
         <p>
-          Paste the output of your{' '}
+          Paste the output of your{" "}
           <a
             href="https://marlinfw.org/docs/gcode/M420.html"
             className="underline"
           >
             <code className="text-blue-500">M420 V</code>
-          </a>{' '}
+          </a>{" "}
           command
         </p>
         <NumberListLoader list={grid1} setList={setGrid1} />
@@ -61,16 +61,19 @@ function App() {
         <p>To use this tool, follow these steps:</p>
         <ol className="list-decimal pl-4">
           <li>
-            Modify the mesh in the left grid by clicking on the cells and
-            entering new values.
+            Modify the mesh in in the first grid by clicking on the cells and
+            clicking the buttons to get new values.
           </li>
-          <li>View the updated mesh in the right grid.</li>
-          <li>Make any further modifications as needed.</li>
+          <li>View the updated mesh below this one.</li>
           <li>
-            Adjust the fade value using the dropdown menu. The fade value controls
-            the intensity of the color gradient applied to the cells in the right
-            grid. Higher fade values result in a more pronounced gradient, while
-            lower fade values result in a subtle gradient.
+            Adjust the fade value using the dropdown menu. The fade value
+            controls the spread of the change that you make to the cell in the
+            neighboring cells in the grid grid. A low value will have less
+            impact where a higher value will have impact further away
+          </li>
+          <li>
+            Copy the generated G-Code and paste it in Pronterface or in the
+            startup code of the slicer.
           </li>
         </ol>
 
@@ -107,7 +110,7 @@ function App() {
           <select
             className="bg-white border border-gray-300 rounded px-4 py-2 ml-2"
             value={options.fade}
-            onChange={(e) => setOption('fade', parseInt(e.target.value))}
+            onChange={(e) => setOption("fade", parseInt(e.target.value))}
           >
             <option value={1}>Fade 1</option>
             <option value={2}>Fade 2</option>
@@ -139,7 +142,16 @@ function App() {
           <h1 className="text-2xl font-bold mb-4 mt-8">G-Code</h1>
           <p>
             The following G-Code represents the difference between the original
-            mesh and the modified mesh:
+            mesh and the modified mesh.
+            <br />
+            Take a look at{" "}
+            <a
+              href="https://marlinfw.org/docs/gcode/M421.html"
+              className="underline"
+            >
+              M421
+            </a>{" "}
+            for more information.
           </p>
           <pre className="bg-gray-100 p-4">
             {grid1?.[0]?.[0] && grid2?.[0]?.[0] && generateGCode(grid1, grid2)}
@@ -151,7 +163,7 @@ function App() {
 }
 
 function generateGCode(array1: number[][], array2: number[][]) {
-  let gCode = '';
+  let gCode = "";
   for (let i = 0; i < array1.length; i++) {
     for (let j = 0; j < array1[i].length; j++) {
       const difference =
