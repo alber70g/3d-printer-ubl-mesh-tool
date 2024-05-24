@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+		"build-deploy-local": "tsc && vite build -c vite.config.deploy.ts && cp -r dist/* /Volumes/rootshare/user/appdata/caddy-docker-proxy/static/ubl-mesh-tool",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
