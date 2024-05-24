@@ -154,13 +154,38 @@ function App() {
             </a>{" "}
             for more information.
           </p>
-          <pre className="bg-gray-100 p-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+            onClick={() => {
+              const gCode = checkGrids(grid1, grid2) ? generateGCode(grid1, grid2) : "";
+              navigator.clipboard.writeText(gCode);
+            }}
+          >
+            Copy Code
+          </button> 
+          <button
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-2"
+            onClick={() => saveTextAsFile(generateGCode(grid1, grid2), "update-grid.gcode")}
+          >
+            Save as File
+          </button>
+          <pre id="codeblock" className="bg-gray-100 p-4">
             {checkGrids(grid1, grid2) && generateGCode(grid1, grid2)}
           </pre>
         </section>
       </div>
     </>
   );
+}
+
+function saveTextAsFile(text: string, fileName: string) {
+  const element = document.createElement("a");
+  const file = new Blob([text], { type: "text/plain" });
+  element.href = URL.createObjectURL(file);
+  element.download = fileName;
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
 }
 
 function checkGrids(array1: number[][], array2: number[][]) {
