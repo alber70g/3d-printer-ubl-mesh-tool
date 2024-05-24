@@ -155,12 +155,21 @@ function App() {
             for more information.
           </p>
           <pre className="bg-gray-100 p-4">
-            {grid1?.[0]?.[0] && grid2?.[0]?.[0] && generateGCode(grid1, grid2)}
+            {checkGrids(grid1, grid2) && generateGCode(grid1, grid2)}
           </pre>
         </section>
       </div>
     </>
   );
+}
+
+function checkGrids(array1: number[][], array2: number[][]) {
+  if (!(array1?.[0]?.[0] && array2?.[0]?.[0])) {
+    return false;
+  }
+  if (array1.length !== array2.length) return false;
+  if (array1[0].length !== array2[0].length) return false;
+  return true;
 }
 
 function generateGCode(array1: number[][], array2: number[][]) {
