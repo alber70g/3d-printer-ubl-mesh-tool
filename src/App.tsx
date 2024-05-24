@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import NumberListLoader from "./components/NumberListLoader";
-import Grid from "./components/Grid";
+import NumberListLoader from "./features/NumberListLoader";
+import Grid from "./features/Grid";
+import { Section } from "./components/Section";
+import { ButtonRow } from "./components/ButtonRow";
+import { Button } from "./components/Button";
+import { Code, CodeBlock } from "./components/Code";
 
 function App() {
   const [grid1, setGrid1] = useState<number[][]>([]);
@@ -39,108 +43,108 @@ function App() {
   return (
     <>
       <div className="container mx-auto">
-        <h1 className="text-2xl font-bold mb-4 mt-8">
-          3D Printer UBL Mesh Tool
-        </h1>
-        <p>
-          This app allows you to modify and visualize your 3D printer's Unified
-          Bed Leveling (UBL) mesh.
-        </p>
-        <p>
-          Paste the output of your{" "}
-          <a
-            href="https://marlinfw.org/docs/gcode/M420.html"
-            className="underline"
-          >
-            <code className="text-blue-500">M420 V</code>
-          </a>{" "}
-          command
-        </p>
-        <NumberListLoader list={grid1} setList={setGrid1} />
+        <Section title="3D Printer UBL Mesh Tool">
+          <p>
+            This app allows you to modify and visualize your 3D printer's
+            Unified Bed Leveling (UBL) mesh.
+          </p>
 
-        <p>To use this tool, follow these steps:</p>
-        <ol className="list-decimal pl-4">
-          <li>
-            Modify the mesh in in the first grid by clicking on the cells and
-            clicking the buttons to get new values.
-          </li>
-          <li>View the updated mesh below this one.</li>
-          <li>
-            Adjust the fade value using the dropdown menu. The fade value
-            controls the spread of the change that you make to the cell in the
-            neighboring cells in the grid grid. A low value will have less
-            impact where a higher value will have impact further away
-          </li>
-          <li>
-            Copy the generated G-Code and paste it in Pronterface or in the
-            startup code of the slicer.
-          </li>
-        </ol>
+          <p>To use this tool, follow these steps:</p>
+          <ol className="list-decimal pl-8">
+            <li>
+              Modify the mesh in in the first grid by clicking on the cells and
+              clicking the buttons to get new values.
+            </li>
+            <li>View the updated mesh below this one.</li>
+            <li>
+              Adjust the fade value using the dropdown menu. The fade value
+              controls the spread of the change that you make to the cell in the
+              neighboring cells in the grid grid. A low value will have less
+              impact where a higher value will have impact further away
+            </li>
+            <li>
+              Copy the generated G-Code and paste it in Pronterface or in the
+              startup code of the slicer.
+            </li>
+          </ol>
+        </Section>
 
-        <h1 className="text-2xl font-bold mb-4 mt-8">Your input mesh</h1>
+        <Section title="Import mesh">
+          <p>
+            Paste the output of your{" "}
+            <a
+              href="https://marlinfw.org/docs/gcode/M420.html"
+              className="underline"
+            >
+              <Code>M420 V</Code>
+            </a>{" "}
+            command
+          </p>
+          <NumberListLoader list={grid1} setList={setGrid1} />
+        </Section>
 
-        <div className="mb-4">
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setGrid1(grid1.slice(1))}
-          >
-            Remove first row
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-            onClick={() => setGrid1(grid1.map((row) => row.slice(1)))}
-          >
-            Remove first column
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-            onClick={() => setGrid1(grid1.slice(0, -1))}
-          >
-            Remove last row
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-            onClick={() => setGrid1(grid1.map((row) => row.slice(0, -1)))}
-          >
-            Remove last column
-          </button>
-        </div>
+        <Section title="Your input mesh">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="danger" onClick={() => setGrid1(grid1.slice(1))}>
+              Remove first row
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => setGrid1(grid1.map((row) => row.slice(1)))}
+            >
+              Remove first column
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => setGrid1(grid1.slice(0, -1))}
+            >
+              Remove last row
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => setGrid1(grid1.map((row) => row.slice(0, -1)))}
+            >
+              Remove last column
+            </Button>
+          </div>
 
-        <div className="mb-4">
-          <select
-            className="bg-white border border-gray-300 rounded px-4 py-2 ml-2"
-            value={options.fade}
-            onChange={(e) => setOption("fade", parseInt(e.target.value))}
-          >
-            <option value={0}>Fade 0</option>
-            <option value={1}>Fade 1</option>
-            <option value={2}>Fade 2</option>
-            <option value={3}>Fade 3</option>
-            <option value={4}>Fade 4</option>
-            <option value={5}>Fade 5</option>
-            <option value={6}>Fade 6</option>
-          </select>
-          <span className="ml-2">Current fade value: {options.fade}</span>
-        </div>
+          <div className="flex items-center gap-2">
+            <select
+              className="bg-white border border-gray-300 rounded px-4 py-2"
+              value={options.fade}
+              onChange={(e) => setOption("fade", parseInt(e.target.value))}
+            >
+              <option value={0}>Fade 0</option>
+              <option value={1}>Fade 1</option>
+              <option value={2}>Fade 2</option>
+              <option value={3}>Fade 3</option>
+              <option value={4}>Fade 4</option>
+              <option value={5}>Fade 5</option>
+              <option value={6}>Fade 6</option>
+            </select>
+            <span>Current fade value: {options.fade}</span>
+          </div>
 
-        <Grid
-          list={grid1}
-          options={options}
-          list2={grid2}
-          setList2={setGrid2}
-        />
-        <h1 className="text-2xl font-bold mb-4 mt-8">New mesh</h1>
-        <div className="mb-4">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setGrid2(grid1)}
-          >
-            Reset Grid
-          </button>
-        </div>
-        <Grid list={grid2} />
-        <section className="h-lvh">
-          <h1 className="text-2xl font-bold mb-4 mt-8">G-Code</h1>
+          <Grid
+            list={grid1}
+            options={options}
+            list2={grid2}
+            setList2={setGrid2}
+          />
+        </Section>
+
+        <Section title="New Mesh">
+          <ButtonRow>
+            <Button
+              onClick={() => setGrid2(grid1)}
+            >
+              Reset Grid
+            </Button>
+          </ButtonRow>
+          <Grid list={grid2} />
+        </Section>
+
+        <Section title="G-Code">
           <p>
             The following G-Code represents the difference between the original
             mesh and the modified mesh.
@@ -154,25 +158,31 @@ function App() {
             </a>{" "}
             for more information.
           </p>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-            onClick={() => {
-              const gCode = checkGrids(grid1, grid2) ? generateGCode(grid1, grid2) : "";
-              navigator.clipboard.writeText(gCode);
-            }}
-          >
-            Copy Code
-          </button> 
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-2"
-            onClick={() => saveTextAsFile(generateGCode(grid1, grid2), "update-grid.gcode")}
-          >
-            Save as File
-          </button>
-          <pre id="codeblock" className="bg-gray-100 p-4">
+          <ButtonRow>
+            <Button
+              onClick={() => {
+                const gCode = checkGrids(grid1, grid2)
+                  ? generateGCode(grid1, grid2)
+                  : "";
+                navigator.clipboard.writeText(gCode);
+              }}
+            >
+              Copy Code
+            </Button>
+            <Button
+						variant="success"
+              onClick={() =>
+                saveTextAsFile(generateGCode(grid1, grid2), "update-grid.gcode")
+              }
+            >
+              Save as File
+            </Button>
+          </ButtonRow>
+
+          <CodeBlock >
             {checkGrids(grid1, grid2) && generateGCode(grid1, grid2)}
-          </pre>
-        </section>
+          </CodeBlock>
+        </Section>
       </div>
     </>
   );

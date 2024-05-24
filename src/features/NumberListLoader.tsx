@@ -81,7 +81,7 @@ function NumberListLoader({
   }, [contents]);
 
   return (
-    <div className="mb-4">
+    <div>
       <textarea
         className="border border-gray-300 p-2"
         cols={80}

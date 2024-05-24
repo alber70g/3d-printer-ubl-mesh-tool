@@ -1,4 +1,6 @@
 import React from "react";
+import { ButtonRow } from "../components/ButtonRow";
+import { Button } from "../components/Button";
 
 type GridProps = {
   list: number[][];
@@ -84,7 +86,7 @@ const Grid: React.FC<GridProps> = ({ list, list2, setList2, options }) => {
   return (
     list &&
     list[0] && (
-      <table>
+      <table className="w-0">
         <tbody>
           {list.map((row, rowIndex) => (
             <tr key={rowIndex}>
@@ -93,7 +95,6 @@ const Grid: React.FC<GridProps> = ({ list, list2, setList2, options }) => {
                   key={cellIndex}
                   className="bg-gray-200 p-2"
                   style={{
-                    marginRight: "10px",
                     backgroundColor: calculateHeatmapColor(cell),
                   }}
                   onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
@@ -104,64 +105,62 @@ const Grid: React.FC<GridProps> = ({ list, list2, setList2, options }) => {
                     showButtons &&
                     currentRow === rowIndex &&
                     currentCell === cellIndex && (
-                      <div className="button-container absolute flex flex-col">
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
+                      <ButtonRow
+                        style={{
+                          position: "absolute",
+													flexDirection: "column"
+                        }}
+                      >
+                        <Button
                           onClick={() =>
                             updateMeshPoint(rowIndex, cellIndex, 0.1)
                           }
                         >
                           +0.10
-                        </button>
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
+                        </Button>
+                        <Button
                           onClick={() =>
                             updateMeshPoint(rowIndex, cellIndex, 0.05)
                           }
                         >
                           +0.05
-                        </button>
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
+                        </Button>
+                        <Button
                           onClick={() =>
                             updateMeshPoint(rowIndex, cellIndex, 0.01)
                           }
                         >
                           +0.01
-                        </button>
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
+                        </Button>
+                        <Button
                           onClick={() =>
                             handleResetButtonClick(rowIndex, cellIndex)
                           }
                         >
                           Reset
-                        </button>
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
+                        </Button>
+                        <Button
                           onClick={() =>
                             updateMeshPoint(rowIndex, cellIndex, -0.01)
                           }
                         >
                           -0.01
-                        </button>
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
+                        </Button>
+                        <Button
                           onClick={() =>
                             updateMeshPoint(rowIndex, cellIndex, -0.05)
                           }
                         >
                           -0.05
-                        </button>
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
+                        </Button>
+                        <Button
                           onClick={() =>
                             updateMeshPoint(rowIndex, cellIndex, -0.1)
                           }
                         >
                           -0.10
-                        </button>
-                      </div>
+                        </Button>
+                      </ButtonRow>
                     )}
                 </td>
               ))}
