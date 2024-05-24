@@ -10,6 +10,7 @@ import { Code, CodeBlock } from "./components/Code";
 function App() {
   const [grid1, setGrid1] = useState<number[][]>([]);
   const [grid2, setGrid2] = useState<number[][]>([]);
+  const [gcodeType, setGcodeType] = useState<"diff" | "absolute">("diff");
 
   const [options, setOptions] = useState<{ fade: number }>({ fade: 0 });
   const setOption = (key: string, value: number) => {
@@ -80,7 +81,13 @@ function App() {
             </a>{" "}
             command
           </p>
-          <NumberListLoader list={grid1} setList={setGrid1} />
+          <NumberListLoader
+            list={grid1}
+            setList={(...args) => {
+              setGrid1(...args);
+              setGrid2(...args);
+            }}
+          />
         </Section>
 
         <Section title="Your input mesh">
@@ -135,11 +142,7 @@ function App() {
 
         <Section title="New Mesh">
           <ButtonRow>
-            <Button
-              onClick={() => setGrid2(grid1)}
-            >
-              Reset Grid
-            </Button>
+            <Button onClick={() => setGrid2(grid1)}>Reset Grid</Button>
           </ButtonRow>
           <Grid list={grid2} />
         </Section>
@@ -160,27 +163,39 @@ function App() {
           </p>
           <ButtonRow>
             <Button
+              onClick={() =>
+                setGcodeType(gcodeType === "absolute" ? "diff" : "absolute")
+              }
+            >
+              {gcodeType === "absolute"
+                ? "Use Differences (I J Q)"
+                : "Use Absolute Values (UBL) (I J Z)"}
+            </Button>
+            <Button
+              variant="success"
+              onClick={() =>
+                saveTextAsFile(
+                  generateGCode(gcodeType, grid1, grid2),
+                  "update-grid.gcode"
+                )
+              }
+            >
+              Save as File
+            </Button>
+            <Button
+              variant="success"
               onClick={() => {
                 const gCode = checkGrids(grid1, grid2)
-                  ? generateGCode(grid1, grid2)
+                  ? generateGCode(gcodeType, grid1, grid2)
                   : "";
                 navigator.clipboard.writeText(gCode);
               }}
             >
               Copy Code
             </Button>
-            <Button
-						variant="success"
-              onClick={() =>
-                saveTextAsFile(generateGCode(grid1, grid2), "update-grid.gcode")
-              }
-            >
-              Save as File
-            </Button>
           </ButtonRow>
-
-          <CodeBlock >
-            {checkGrids(grid1, grid2) && generateGCode(grid1, grid2)}
+          <CodeBlock>
+            {checkGrids(grid1, grid2) && generateGCode(gcodeType, grid1, grid2)}
           </CodeBlock>
         </Section>
       </div>
@@ -207,7 +222,22 @@ function checkGrids(array1: number[][], array2: number[][]) {
   return true;
 }
 
-function generateGCode(array1: number[][], array2: number[][]) {
+function generateGCode(
+  type: "diff" | "absolute" = "diff",
+  array1: number[][],
+  array2: number[][]
+) {
+  switch (type) {
+    case "diff":
+      return generateDiffGCode(array1, array2);
+    case "absolute":
+      return generateAbsoluteGCode(array1, array2);
+    default:
+      return "";
+  }
+}
+
+function generateDiffGCode(array1: number[][], array2: number[][]) {
   if (array1.length === 0 || array2.length === 0) return "";
   let gCode = "";
   const rowMap = Array.from({ length: array2.length }).map(
@@ -220,6 +250,24 @@ function generateGCode(array1: number[][], array2: number[][]) {
         Math.round((array2[i][j] - array1[i][j]) * 100000) / 100000;
       if (difference === 0) continue;
       const gCodeCommand = `M421 I${j} J${rowMap[i]} Q${difference}\n`;
+      gCode += gCodeCommand;
+    }
+  }
+  return gCode;
+}
+
+function generateAbsoluteGCode(array1: number[][], array2: number[][]) {
+  if (array2.length === 0) return "";
+  let gCode = "";
+  const rowMap = Array.from({ length: array2.length }).map(
+    (_, i) => array2.length - i - 1
+  );
+
+  for (let i = 0; i < array2.length; i++) {
+    for (let j = 0; j < array2[i].length; j++) {
+      if (array1[i][j] === array2[i][j]) continue;
+
+      const gCodeCommand = `M421 I${j} J${rowMap[i]} Z${array2[i][j]}\n`;
       gCode += gCodeCommand;
     }
   }
